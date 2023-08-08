@@ -1,9 +1,9 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name="wallet_of_satoshi",
     version="0.1",
-    packages=find_packages(),
+    packages=["wallet_of_satoshi"],
     install_requires=["requests"],
     url="https://github.com/ajrlewis/wallet_of_satoshi",
     author="ajrlewis",
