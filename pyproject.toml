@@ -1,0 +1,11 @@
+[project]
+name = "wallet_of_satoshi"
+description = "Simple Wallet of Satoshi API"
+version = "0.1.0"
+readme = "README.md"
+authors = [
+    { name = "ajrlewis", email = "hello@ajrlewis.com" }
+]
+dependencies = [
+    "requests==2.29.0",
+]
