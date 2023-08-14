@@ -36,10 +36,10 @@ class WalletOfSatoshi:
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
-            data["metadata"] = data["metadata"].replace(
-                f"Pay to Wallet of Satoshi user: {self.username}",
-                f"Deposit to {self.display_name}",
-            )
+            # data["metadata"] = data["metadata"].replace(
+            #     f"Pay to Wallet of Satoshi user: {self.username}",
+            #     f"Deposit to {self.display_name}",
+            # )
             return data
 
         raise Exception("Error: Failed to fetch LNURLP data from Wallet of Satoshi")
