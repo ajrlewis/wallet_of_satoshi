@@ -1,6 +1,7 @@
 from decimal import Decimal
 import json
 import requests
+from typing import Optional
 
 MiliSatoshi = Decimal
 
@@ -10,14 +11,16 @@ class WalletOfSatoshi:
     Wrapper class for interacting with Wallet of Satoshi API.
     """
 
-    def __init__(self, username: str):
+    def __init__(self, username: str, display_name: Optional[str] = None):
         """
         Initializes the WalletOfSatoshi object.
 
         Args:
             username: Wallet of Satoshi username.
+            display_name:
         """
         self.username = username
+        self.display_name = display_name
 
     def well_known(self) -> str:
         """
@@ -32,7 +35,12 @@ class WalletOfSatoshi:
         url = f"https://walletofsatoshi.com/.well-known/lnurlp/{self.username}"
         response = requests.get(url)
         if response.status_code == 200:
-            return response.json()
+            data = response.json()
+            data["metadata"] = data["metadata"].replace(
+                f"Pay to Wallet of Satoshi user: {self.username}",
+                f"Deposit to {self.display_name}",
+            )
+            return data
 
         raise Exception("Error: Failed to fetch LNURLP data from Wallet of Satoshi")
 
