@@ -32,7 +32,8 @@ class WalletOfSatoshi:
         url = f"https://walletofsatoshi.com/.well-known/lnurlp/{self.username}"
         response = requests.get(url)
         if response.status_code == 200:
-            return response.text
+            return response.json()
+
         raise Exception("Error: Failed to fetch LNURLP data from Wallet of Satoshi")
 
     def payment_request(self, amount: MiliSatoshi = MiliSatoshi(1000)) -> str:
