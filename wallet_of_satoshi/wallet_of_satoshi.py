@@ -49,10 +49,13 @@ class WalletOfSatoshi:
         Raises:
             Exception: If there is an error generating the payment request.
         """
-        text = self.well_known()
-        data = json.loads(text)
+        data = self.well_known()
         url = data["callback"]
         response = requests.get(url, params={"amount": str(amount)})
-        data = json.loads(response.text)
-        pr = data["pr"]
-        return pr
+        if response.status_code == 200:
+            data = json.loads(response.text)
+            pr = data["pr"]
+            return pr
+        raise Exception("Error: Failed to fetch payment request from Wallet of Satoshi")
+
+
