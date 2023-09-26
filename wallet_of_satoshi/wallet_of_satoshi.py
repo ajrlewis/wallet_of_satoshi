@@ -7,7 +7,7 @@ MiliSatoshi = Decimal
 
 class WalletOfSatoshi:
     """
-    Wrapper class for interacting with Wallet of Satoshi API.
+    Wrapper class for interacting with the Wallet of Satoshi API.
     """
 
     def __init__(self, username: str):
@@ -18,10 +18,13 @@ class WalletOfSatoshi:
             username: Wallet of Satoshi username.
         """
         self.username = username
+        self.well_known_url = (
+            f"https://walletofsatoshi.com/.well-known/lnurlp/{self.username}"
+        )
 
     def well_known(self) -> str:
         """
-        Fetches the LNURLP data from Wallet of Satoshi.
+        Fetches the LNURLP data from the .well-known endpoint.
 
         Returns:
             The LNURLP data as a string.
@@ -29,14 +32,13 @@ class WalletOfSatoshi:
         Raises:
             Exception: If there is an error fetching the LNURLP data.
         """
-        url = f"https://walletofsatoshi.com/.well-known/lnurlp/{self.username}"
-        response = requests.get(url)
+        response = requests.get(self.well_known_url)
         if response.status_code == 200:
-            return response.json()
+            data = response.json()
+            return data
+        raise Exception("Error: Failed to fetch LNURLP data.")
 
-        raise Exception("Error: Failed to fetch LNURLP data from Wallet of Satoshi")
-
-    def payment_request(self, amount: MiliSatoshi = MiliSatoshi(1000)) -> str:
+    def pay_request(self, amount: MiliSatoshi = MiliSatoshi(1000)) -> str:
         """
         Generates a payment request.
 
@@ -50,12 +52,9 @@ class WalletOfSatoshi:
             Exception: If there is an error generating the payment request.
         """
         data = self.well_known()
-        url = data["callback"]
+        url = data["callback"]  # URL from LN SERVICE to accept pay request
         response = requests.get(url, params={"amount": str(amount)})
         if response.status_code == 200:
-            data = json.loads(response.text)
-            pr = data["pr"]
-            return pr
-        raise Exception("Error: Failed to fetch payment request from Wallet of Satoshi")
-
-
+            data = response.json()
+            return data
+        raise Exception("Error: Failed to fetch payment request")
