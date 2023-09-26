@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="wallet_of_satoshi",
-    version="0.1",
+    version="0.2",
     packages=["wallet_of_satoshi"],
     install_requires=["requests"],
     url="https://github.com/ajrlewis/wallet_of_satoshi",
