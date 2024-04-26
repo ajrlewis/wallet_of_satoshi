@@ -37,11 +37,9 @@ class WalletOfSatoshi:
         response = requests.get(self.well_known_url)
         if response.status_code == 200:
             data = response.json()
-            if "callback" not in data.keys():
-                pass
-            else:
+            if "callback" in data.keys():
                 return data
-        raise Exception(f"Failed to fetch LNURLP data from {self.well_known_url}.")
+        raise Exception(f"Failed to fetch LNURLP data from {self.well_known_url}")
 
     def pay_request(self, amount: MiliSatoshi = MiliSatoshi(1000)) -> str:
         """
@@ -57,12 +55,15 @@ class WalletOfSatoshi:
         Raises:
             Exception: If there is an error generating the payment request.
         """
-        data = self.well_known()  # Get the lightning address response
-        url = data[
-            "callback"
-        ]  # Extract the lightning service URL for creating a payment request
+        data = (
+            self.well_known()
+        )  # Get the lightning address response (should raise an exception if there's an error)
+        url = data["callback"]
         response = requests.get(url, params={"amount": str(amount)})
         if response.status_code == 200:
             data = response.json()
-            return data
-        raise Exception("Error: Failed to fetch payment request")
+            if "pr" in data.keys():
+                return data
+        raise Exception(
+            f"Failed to fetch payment request from {url} for amount {amount}"
+        )
