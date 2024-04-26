@@ -1,6 +1,7 @@
 from decimal import Decimal
 import json
 import requests
+from typing import Any
 
 MiliSatoshi = Decimal
 
@@ -23,7 +24,7 @@ class WalletOfSatoshi:
     def well_known_url(self):
         return f"https://walletofsatoshi.com/.well-known/lnurlp/{self.username}"
 
-    def well_known(self) -> str:
+    def well_known(self) -> dict[str, Any]:
         """
         Fetches the LNURLP data from the .well-known endpoint.
 
@@ -36,7 +37,10 @@ class WalletOfSatoshi:
         response = requests.get(self.well_known_url)
         if response.status_code == 200:
             data = response.json()
-            return data
+            if "callback" not in data.keys():
+                pass
+            else:
+                return data
         raise Exception(f"Failed to fetch LNURLP data from {self.well_known_url}.")
 
     def pay_request(self, amount: MiliSatoshi = MiliSatoshi(1000)) -> str:
