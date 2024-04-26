@@ -7,7 +7,7 @@ MiliSatoshi = Decimal
 
 class WalletOfSatoshi:
     """
-    Wrapper class for interacting with the Wallet of Satoshi API.
+    Wrapper class for interacting with the Wallet of Satoshi website API.
     """
 
     def __init__(self, username: str):
@@ -15,12 +15,13 @@ class WalletOfSatoshi:
         Initializes the WalletOfSatoshi object.
 
         Args:
-            username: Wallet of Satoshi username.
+            username: Wallet of Satoshi app-generated username.
         """
         self.username = username
-        self.well_known_url = (
-            f"https://walletofsatoshi.com/.well-known/lnurlp/{self.username}"
-        )
+
+    @property
+    def well_known_url(self):
+        return f"https://walletofsatoshi.com/.well-known/lnurlp/{self.username}"
 
     def well_known(self) -> str:
         """
@@ -36,11 +37,12 @@ class WalletOfSatoshi:
         if response.status_code == 200:
             data = response.json()
             return data
-        raise Exception("Error: Failed to fetch LNURLP data.")
+        raise Exception(f"Failed to fetch LNURLP data from {self.well_known_url}.")
 
     def pay_request(self, amount: MiliSatoshi = MiliSatoshi(1000)) -> str:
         """
-        Generates a payment request.
+        Indirectly generates a payment request exploiting the callback from the
+        lightning address above,
 
         Args:
             amount: Amount in mSatoshis (optional, default is 1000).
@@ -51,8 +53,10 @@ class WalletOfSatoshi:
         Raises:
             Exception: If there is an error generating the payment request.
         """
-        data = self.well_known()
-        url = data["callback"]  # URL from LN SERVICE to accept pay request
+        data = self.well_known()  # Get the lightning address response
+        url = data[
+            "callback"
+        ]  # Extract the lightning service URL for creating a payment request
         response = requests.get(url, params={"amount": str(amount)})
         if response.status_code == 200:
             data = response.json()
