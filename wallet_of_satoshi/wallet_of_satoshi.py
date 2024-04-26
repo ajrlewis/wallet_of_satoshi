@@ -55,10 +55,13 @@ class WalletOfSatoshi:
         Raises:
             Exception: If there is an error generating the payment request.
         """
-        data = (
-            self.well_known()
-        )  # Get the lightning address response (should raise an exception if there's an error)
-        url = data["callback"]
+        data = self.well_known()  # Get the lightning address
+
+        # TODO (ajrl) Check the amount is within minSendable and maxSendable.
+        min_sendable = data["minSendable"]
+        max_sendable = data["maxSendable"]
+
+        url = data["callback"]  # well_known will ensure callback exists
         response = requests.get(url, params={"amount": str(amount)})
         if response.status_code == 200:
             data = response.json()
