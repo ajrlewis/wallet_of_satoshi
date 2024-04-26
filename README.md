@@ -1,8 +1,8 @@
-# WalletOfSatoshi
+# wallet_of_satoshi
 
 ![My Project Logo](images/logo.png)
 
-A package to use with your Wallet of Satoshi application instance.
+A python package to connect to your Wallet of Satoshi application.
 
 ## Installation
 
