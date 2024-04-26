@@ -14,7 +14,7 @@ pip install git+https://github.com/ajrlewis/wallet_of_satoshi.git
 
 ## Usage
 
-Create an instance of `WalletOfSatoshi` and pass the `username` of your Wallet of Satoshi's account to its constructor!
+Create an instance of the `WalletOfSatoshi` class and pass it your Wallet of Satoshi account's `username`!
 
 ```python
 from wallet_of_satoshi import WalletOfSatoshi
@@ -29,7 +29,7 @@ The "well-known" lightning address method returns the required response to satis
 
 2. `wos.pay_request`
 
-Somewhat hacky method that returns a lightning invoice for your Wallet of Satoshi account for a given amount only. This method exploits the callback attribute of a valid lightning address response returned in the above method in order to ask for a lightning invoice of a specified amount.
+A somewhat hacky method that returns a lightning invoice from your Wallet of Satoshi account for a given amount **only**. This method exploits the callback attribute of a valid lightning address response returned in the above method to then ask for a lightning invoice of a specific amount. Sweet!
 
 ## License
 
